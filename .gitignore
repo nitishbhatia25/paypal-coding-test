@@ -3,3 +3,6 @@
 employeeservApi/target/*
 employeeservImplementation/target/*
 employeeservFunctionalTests/target/*
+employeeservFunctionalTests/target/employeeservFunctionalTests-0.0.1-SNAPSHOT.jar
+employeeservImplementation/target/employeeservImplementation-0.0.1-SNAPSHOT.jar
+employeeservImplementation/target/employeeservImplementation-0.0.1-SNAPSHOT.jar.original
