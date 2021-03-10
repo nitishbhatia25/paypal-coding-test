@@ -1,3 +1,5 @@
 *.iml
 .idea/
-#employeeservApi/target/*
+employeeservApi/target/*
+employeeservImplementation/target/*
+employeeservFunctionalTests/target/*
