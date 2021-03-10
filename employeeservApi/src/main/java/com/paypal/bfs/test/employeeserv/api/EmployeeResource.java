@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.paypal.bfs.test.employeeserv.api.model.Employee;
 
+import java.util.List;
+
 /**
  * Interface for employee resource operations.
  */
@@ -24,4 +26,10 @@ public interface EmployeeResource {
     // ----------------------------------------------------------
     @RequestMapping(value = "/v1/bfs/employees/create", method = RequestMethod.POST)
     ResponseEntity<Employee> addEmployee(@RequestBody Employee e, @RequestHeader("idempotency-key") String idempotencyKey);
+
+    @RequestMapping("/v1/bfs/employees/retrieve/all")
+    ResponseEntity<List<Employee>> getAllEmployees();
+
+    @RequestMapping("/v1/bfs/employees/delete/{id}")
+    ResponseEntity<Employee> deleteEmployeeById(@PathVariable("id") Long id);
 }

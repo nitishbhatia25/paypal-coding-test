@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -46,5 +48,20 @@ public class EmployeeResourceImpl implements EmployeeResource {
         EmployeeEntity savedEmployeeEntity = employeeRepository.save(employeeEntity);
 
         return new ResponseEntity<>(savedEmployeeEntity.toPOJOEmployee(), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<Employee>> getAllEmployees() {
+        List<Employee> allEmployees = new ArrayList<>();
+        employeeRepository.findAll().forEach( (employeeEntity) -> {
+            allEmployees.add(employeeEntity.toPOJOEmployee());
+        });
+        return new ResponseEntity<>(allEmployees, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Employee> deleteEmployeeById(Long id) {
+        employeeRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
