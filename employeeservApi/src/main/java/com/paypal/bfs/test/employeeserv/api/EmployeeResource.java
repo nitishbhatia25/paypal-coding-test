@@ -2,11 +2,8 @@ package com.paypal.bfs.test.employeeserv.api;
 
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import com.paypal.bfs.test.employeeserv.api.model.Employee;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * Interface for employee resource operations.
@@ -26,5 +23,5 @@ public interface EmployeeResource {
     // TODO - add a new operation for creating employee resource.
     // ----------------------------------------------------------
     @RequestMapping(value = "/v1/bfs/employees/create", method = RequestMethod.POST)
-    ResponseEntity<Employee> addEmployee(@RequestBody Employee e);
+    ResponseEntity<Employee> addEmployee(@RequestBody Employee e, @RequestHeader("idempotency-key") String idempotencyKey);
 }

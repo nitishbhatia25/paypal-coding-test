@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.sql.Date;
 
 @Entity
-@Table(name = "EMPLOYEE")
+@Table(name = "EMPLOYEE", indexes = @Index(columnList = "idempotencyKey"))
 public class EmployeeEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -16,11 +16,13 @@ public class EmployeeEntity {
   private Date dateOfBirth;
   @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
   private AddressEntity address;
+  @Column(nullable=false, unique=true)
+  private String idempotencyKey;
 
   public EmployeeEntity() {
   }
 
-  public EmployeeEntity(Employee employee) {
+  public EmployeeEntity(Employee employee, String idempotencyKey) {
 //    if (employee.getId() != null)
 //      this.id = employee.getId();
     this.firstName = employee.getFirstName();
@@ -28,6 +30,7 @@ public class EmployeeEntity {
     this.dateOfBirth = Date.valueOf(employee.getDateOfBirth());
     this.address = new AddressEntity(employee.getAddress());
     this.address.setEmployee(this);
+    this.idempotencyKey = idempotencyKey;
   }
 
   public Employee toPOJOEmployee() {
@@ -81,6 +84,14 @@ public class EmployeeEntity {
     address.setEmployee(this);
   }
 
+  public String getIdempotencyKey() {
+    return idempotencyKey;
+  }
+
+  public void setIdempotencyKey(String idempotencyKey) {
+    this.idempotencyKey = idempotencyKey;
+  }
+
   @Override
   public String toString() {
     return "EmployeeEntity{" +
@@ -89,6 +100,7 @@ public class EmployeeEntity {
             ", lastName='" + lastName + '\'' +
             ", dateOfBirth=" + dateOfBirth +
             ", address=" + address.toString() +
+            ", idempotencyKey='" + idempotencyKey + '\'' +
             '}';
   }
 }

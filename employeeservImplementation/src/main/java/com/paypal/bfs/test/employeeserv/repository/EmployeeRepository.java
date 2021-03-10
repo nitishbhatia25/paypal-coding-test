@@ -4,4 +4,5 @@ import com.paypal.bfs.test.employeeserv.model.EmployeeEntity;
 import org.springframework.data.repository.CrudRepository;
 
 public interface EmployeeRepository extends CrudRepository<EmployeeEntity, Long> {
+  public EmployeeEntity findByIdempotencyKey(String idempotencyKey);
 }

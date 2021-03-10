@@ -8,6 +8,7 @@ import com.paypal.bfs.test.employeeserv.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
@@ -33,9 +34,14 @@ public class EmployeeResourceImpl implements EmployeeResource {
     }
 
     @Override
-    public ResponseEntity<Employee> addEmployee(Employee e) {
+    public ResponseEntity<Employee> addEmployee(Employee e, @RequestHeader("idempotency-key") String idempotencyKey) {
+        // Idempotency support in resource creation
+        EmployeeEntity duplicateRequestCheck = employeeRepository.findByIdempotencyKey(idempotencyKey);
+        if (duplicateRequestCheck != null)
+            return new ResponseEntity<>(duplicateRequestCheck.toPOJOEmployee(), HttpStatus.OK);
+
         // Transform pojo employee received to employee entity
-        EmployeeEntity employeeEntity = new EmployeeEntity(e);
+        EmployeeEntity employeeEntity = new EmployeeEntity(e, idempotencyKey);
 
         EmployeeEntity savedEmployeeEntity = employeeRepository.save(employeeEntity);
 
