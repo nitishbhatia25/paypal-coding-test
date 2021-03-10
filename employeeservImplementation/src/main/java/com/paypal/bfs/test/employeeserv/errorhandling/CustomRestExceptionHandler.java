@@ -4,6 +4,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -26,6 +27,12 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
   @ExceptionHandler(Exception.class)
   public ResponseEntity handleException(Exception ex) {
     final ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "Error in processing request", ex.getLocalizedMessage());
+    return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
+  }
+
+  @ExceptionHandler(MissingRequestHeaderException.class)
+  public ResponseEntity handleException(MissingRequestHeaderException ex) {
+    final ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, "Missing request header", ex.getLocalizedMessage());
     return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
   }
 

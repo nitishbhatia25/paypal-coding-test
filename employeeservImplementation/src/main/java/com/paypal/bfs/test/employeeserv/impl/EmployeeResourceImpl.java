@@ -5,6 +5,7 @@ import com.paypal.bfs.test.employeeserv.api.model.Employee;
 import com.paypal.bfs.test.employeeserv.model.AddressEntity;
 import com.paypal.bfs.test.employeeserv.model.EmployeeEntity;
 import com.paypal.bfs.test.employeeserv.repository.EmployeeRepository;
+import com.paypal.bfs.test.employeeserv.service.EmployeeService;
 import com.sun.javafx.util.Logging;
 import org.slf4j.event.Level;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,48 +28,29 @@ import java.util.logging.Logger;
  */
 @RestController
 public class EmployeeResourceImpl implements EmployeeResource {
-
     @Autowired
     EmployeeRepository employeeRepository;
 
+    @Autowired
+    EmployeeService employeeService;
+
     @Override
     public ResponseEntity<Employee> employeeGetById(String id) {
-
-        Optional<EmployeeEntity> employeeData = employeeRepository.findById(Long.valueOf(id));
-        if (employeeData.isPresent()) {
-            // Transform Employee Entity to employee
-            return new ResponseEntity<>(employeeData.get().toPOJOEmployee(), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return employeeService.getEmployee(id);
     }
 
     @Override
     public ResponseEntity<Employee> addEmployee(Employee e, @RequestHeader("idempotency-key") String idempotencyKey) {
-        // Idempotency support in resource creation
-        EmployeeEntity duplicateRequestCheck = employeeRepository.findByIdempotencyKey(idempotencyKey);
-        if (duplicateRequestCheck != null)
-            return new ResponseEntity<>(duplicateRequestCheck.toPOJOEmployee(), HttpStatus.OK);
-
-        // Transform pojo employee received to employee entity
-        EmployeeEntity employeeEntity = new EmployeeEntity(e, idempotencyKey);
-
-        EmployeeEntity savedEmployeeEntity = employeeRepository.save(employeeEntity);
-
-        return new ResponseEntity<>(savedEmployeeEntity.toPOJOEmployee(), HttpStatus.OK);
+        return employeeService.addEmployee(e, idempotencyKey);
     }
 
     @Override
     public ResponseEntity<List<Employee>> getAllEmployees() {
-        List<Employee> allEmployees = new ArrayList<>();
-        employeeRepository.findAll().forEach( (employeeEntity) -> {
-            allEmployees.add(employeeEntity.toPOJOEmployee());
-        });
-        return new ResponseEntity<>(allEmployees, HttpStatus.OK);
+        return employeeService.getAllEmployees();
     }
 
     @Override
     public ResponseEntity<Employee> deleteEmployeeById(Long id) {
-        employeeRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return employeeService.deleteEmployee(id);
     }
 }
