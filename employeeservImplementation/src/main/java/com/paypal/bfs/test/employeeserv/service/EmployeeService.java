@@ -19,7 +19,7 @@ public class EmployeeService {
 
   public EmployeeEntity getEmployee(String id) {
     Optional<EmployeeEntity> employeeData = employeeRepository.findById(Long.valueOf(id));
-    return employeeData.get();
+    return employeeData.isPresent() ? employeeData.get() : null;
   }
 
   public EmployeeEntity addEmployee(Employee e, String idempotencyKey) {

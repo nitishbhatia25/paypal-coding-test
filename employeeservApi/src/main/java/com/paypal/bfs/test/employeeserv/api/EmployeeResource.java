@@ -18,7 +18,7 @@ public interface EmployeeResource {
      * @param id employee id.
      * @return {@link Employee} resource.
      */
-    @RequestMapping("/v1/bfs/employees/retrieve/{id}")
+    @RequestMapping(value = "/v1/bfs/employees/{id}", method = RequestMethod.GET)
     ResponseEntity<Employee> employeeGetById(@PathVariable("id") String id);
 
     // ----------------------------------------------------------
@@ -27,9 +27,9 @@ public interface EmployeeResource {
     @RequestMapping(value = "/v1/bfs/employees/create", method = RequestMethod.POST)
     ResponseEntity<Employee> addEmployee(@RequestBody Employee e, @RequestHeader("idempotency-key") String idempotencyKey);
 
-    @RequestMapping("/v1/bfs/employees/retrieve/all")
+    @RequestMapping(value = "/v1/bfs/employees/all", method = RequestMethod.GET)
     ResponseEntity<List<Employee>> getAllEmployees();
 
-    @RequestMapping("/v1/bfs/employees/delete/{id}")
+    @RequestMapping(value = "/v1/bfs/employees/{id}", method = RequestMethod.DELETE)
     ResponseEntity<Employee> deleteEmployeeById(@PathVariable("id") Long id);
 }
