@@ -11,8 +11,11 @@ public class EmployeeEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
+  @Column(nullable = false)
   private String firstName;
+  @Column(nullable = false)
   private String lastName;
+  @Column(nullable = false)
   private Date dateOfBirth;
   @OneToOne(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
   private AddressEntity address;

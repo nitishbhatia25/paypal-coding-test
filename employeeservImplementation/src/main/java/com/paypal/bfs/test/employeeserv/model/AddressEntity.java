@@ -10,11 +10,16 @@ public class AddressEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
+  @Column(nullable = false)
   private String line1;
   private String line2;
+  @Column(nullable = false)
   private String city;
+  @Column(nullable = false)
   private String state;
+  @Column(nullable = false)
   private String country;
+  @Column(nullable = false)
   private int zipCode;
   @OneToOne
   @MapsId
