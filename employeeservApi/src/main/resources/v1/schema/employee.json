@@ -18,10 +18,57 @@
       "type": "string",
       "minLength": 1,
       "maxLength": 255
+    },
+    "date_of_birth": {
+      "description": "Date of Birth",
+      "type": "string",
+      "format": "date",
+      "customPattern": "yyyy-MM-dd"
+    },
+    "address": {
+      "description": "Address",
+      "type": "object",
+      "properties": {
+        "line1": {
+          "description": "address line 1",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255
+        },
+        "line2": {
+          "description": "address line 2",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255
+        },
+        "city": {
+          "description": "address city",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255
+        },
+        "state": {
+          "description": "address state",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255
+        },
+        "country": {
+          "description": "address country",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255
+        },
+        "zip_code": {
+          "description": "address zip code",
+          "type": "integer"
+        }
+      }
     }
   },
   "required": [
     "first_name",
-    "last_name"
+    "last_name",
+    "date_of_birth"
   ]
 }
