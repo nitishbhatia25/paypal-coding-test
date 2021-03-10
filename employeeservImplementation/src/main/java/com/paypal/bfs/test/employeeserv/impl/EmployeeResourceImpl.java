@@ -36,21 +36,34 @@ public class EmployeeResourceImpl implements EmployeeResource {
 
     @Override
     public ResponseEntity<Employee> employeeGetById(String id) {
-        return employeeService.getEmployee(id);
+        EmployeeEntity employee = employeeService.getEmployee(id);
+        if (employee == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(employee.toPOJOEmployee(), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<Employee> addEmployee(Employee e, @RequestHeader("idempotency-key") String idempotencyKey) {
-        return employeeService.addEmployee(e, idempotencyKey);
+        EmployeeEntity employee = employeeService.checkDuplicateRequest(idempotencyKey);
+        if (employee == null)
+            employee = employeeService.addEmployee(e, idempotencyKey);
+
+        return new ResponseEntity<>(employee.toPOJOEmployee(), HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<List<Employee>> getAllEmployees() {
-        return employeeService.getAllEmployees();
+        List<Employee> allEmployees = new ArrayList<>();
+        List<EmployeeEntity> allEmployeesEntity = employeeService.getAllEmployees();
+        allEmployeesEntity.forEach((employeeEntity) -> {
+            allEmployees.add(employeeEntity.toPOJOEmployee());
+        });
+        return new ResponseEntity<>(allEmployees, HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<Employee> deleteEmployeeById(Long id) {
-        return employeeService.deleteEmployee(id);
+        employeeService.deleteEmployee(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

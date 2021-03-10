@@ -17,39 +17,35 @@ public class EmployeeService {
   @Autowired
   EmployeeRepository employeeRepository;
 
-  public ResponseEntity<Employee> getEmployee(String id) {
+  public EmployeeEntity getEmployee(String id) {
     Optional<EmployeeEntity> employeeData = employeeRepository.findById(Long.valueOf(id));
-    if (employeeData.isPresent()) {
-      // Transform Employee Entity to employee
-      return new ResponseEntity<>(employeeData.get().toPOJOEmployee(), HttpStatus.OK);
-    }
-    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    return employeeData.get();
   }
 
-  public ResponseEntity<Employee> addEmployee(Employee e, String idempotencyKey) {
-    // Idempotency support in resource creation
-    EmployeeEntity duplicateRequestCheck = employeeRepository.findByIdempotencyKey(idempotencyKey);
-    if (duplicateRequestCheck != null)
-      return new ResponseEntity<>(duplicateRequestCheck.toPOJOEmployee(), HttpStatus.OK);
-
+  public EmployeeEntity addEmployee(Employee e, String idempotencyKey) {
     // Transform pojo employee received to employee entity
     EmployeeEntity employeeEntity = new EmployeeEntity(e, idempotencyKey);
 
     EmployeeEntity savedEmployeeEntity = employeeRepository.save(employeeEntity);
 
-    return new ResponseEntity<>(savedEmployeeEntity.toPOJOEmployee(), HttpStatus.OK);
+    return savedEmployeeEntity;
   }
 
-  public ResponseEntity<List<Employee>> getAllEmployees() {
-    List<Employee> allEmployees = new ArrayList<>();
+  public List<EmployeeEntity> getAllEmployees() {
+    List<EmployeeEntity> allEmployees = new ArrayList<>();
     employeeRepository.findAll().forEach( (employeeEntity) -> {
-      allEmployees.add(employeeEntity.toPOJOEmployee());
+      allEmployees.add(employeeEntity);
     });
-    return new ResponseEntity<>(allEmployees, HttpStatus.OK);
+    return allEmployees;
   }
 
-  public ResponseEntity<Employee> deleteEmployee(Long id) {
+  public void deleteEmployee(Long id) {
     employeeRepository.deleteById(id);
-    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  public EmployeeEntity checkDuplicateRequest(String idempotencyKey) {
+    // Idempotency support in resource creation
+    EmployeeEntity employee = employeeRepository.findByIdempotencyKey(idempotencyKey);
+    return employee;
   }
 }
