@@ -25,7 +25,16 @@ public class EmployeeEntity {
   public EmployeeEntity() {
   }
 
+  public EmployeeEntity(String firstName, String lastName, Date dateOfBirth, AddressEntity address, String idempotencyKey) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.dateOfBirth = dateOfBirth;
+    this.address = address;
+    this.idempotencyKey = idempotencyKey;
+  }
+
   public EmployeeEntity(Employee employee, String idempotencyKey) {
+    // Persisting below comments for change in id behaviour in future
 //    if (employee.getId() != null)
 //      this.id = employee.getId();
     this.firstName = employee.getFirstName();
