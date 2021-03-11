@@ -34,4 +34,7 @@ We would like you to enhance the existing project and see you complete the follo
 - Idempotency logic is implemented to avoid duplicate resource creation.
 
 ## Assignment submission
+- Endpoint to Create Employee resource POST `/v1/bfs/employees/create` Append to the request header idempotency-key with any string value
+- idempotency-key used to attain idempotency on POST call
+
 Thank you very much for your time to take this test. Please upload this complete solution in Github and send us the link to `bfs-sor-interview@paypal.com`.
